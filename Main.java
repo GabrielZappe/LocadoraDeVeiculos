@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class Main {
@@ -7,12 +8,24 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         Locadora locadora = new Locadora();
 
+        Veiculo maquinaMisterio = new Veiculo("1", "Máquina do MIstério", TipoVeiculo.SUV);
+        locadora.cadastrarVeiculo(maquinaMisterio);
+        Veiculo deLorean = new Veiculo("2", "DeLorean", TipoVeiculo.MEDIO);
+        locadora.cadastrarVeiculo(deLorean);
+        Veiculo ghostbusters = new Veiculo("3", "Ectomovel", TipoVeiculo.PEQUENO);
+        locadora.cadastrarVeiculo(ghostbusters);
+
+        Cliente dickVigarista = new Cliente("1", "Dick Vigarista", false);
+        locadora.cadastrarCliente(dickVigarista);
+        Cliente speedRacer = new Cliente("2", "Competidor X", true);
+        locadora.cadastrarCliente(speedRacer);
+
         while (true) {
             System.out.println("Escolha uma opção:");
             System.out.println("1. Cadastrar veículo");
             System.out.println("2. Alterar veículo cadastrado");
             System.out.println("3. Buscar veículo por parte do nome");
-            System.out.println("4. Cadastrar cliente");
+            System.out.println("4. Cadastrar ou consultar cliente");
             System.out.println("5. Alterar cliente");
             System.out.println("6. Alugar veículo");
             System.out.println("7. Devolver veículo");
@@ -76,10 +89,58 @@ public class Main {
 
                 case 6:
                     // Alugar veículo para pessoa física e jurídica
+                    System.out.println("Digite a placa do veículo que deseja alugar: ");
+                    String placaAlugar = scanner.next();
+                    Veiculo veiculoAlugar = locadora.buscarVeiculoPorPlaca(placaAlugar);
+                        if (veiculoAlugar == null) {
+                            System.out.println("Veículo não cadastrado.");
+                            break;
+
+                        } else if (!veiculoAlugar.isDisponivel()){ // ver se está alugado
+                            System.out.println("Veículo disponível.");
+                            System.out.println("Insira o ID do cliente: ");
+                            String buscaClienteAlugar = scanner.next();
+                            Cliente clienteAlugar = locadora.buscarClientePorId(buscaClienteAlugar);
+
+                            if (clienteAlugar != null) {
+                                System.out.println("Cliente encontrado.");
+
+                                System.out.println("Insira a data da retirada: ");
+                                LocalDateTime dataHoraAluguel= locadora.getTime();
+                                System.out.println("A hora é: " + dataHoraAluguel); //apagar
+
+                                locadora.alugarVeiculo(clienteAlugar, veiculoAlugar, dataHoraAluguel);
+
+                            } else {
+                                System.out.println("Cliente não cadastrado.");
+                                break;
+                            }
+                        } else {
+                            System.out.println("O veículo está alugado.");
+                        }
                     break;
 
                 case 7:
-                    // Devolver veículo para pessoa física e jurídica
+                    //Devolver veículo para pessoa física e jurídica
+
+                    System.out.println("Digite a placa do veículo que deseja devolver: ");
+                    String placaDevolver = scanner.next();
+                    Veiculo veiculoDevolver = locadora.buscarVeiculoPorPlaca(placaDevolver);
+
+                    if (veiculoDevolver == null) {
+                        System.out.println("Veículo não cadastrado.");
+                        break;
+
+                    } else if (veiculoDevolver.isDisponivel()){ // ver se está alugado
+                        System.out.println("Veículo encontrado.");
+                        Aluguel aluguelDevolver = locadora.buscarAluguelPorPlaca(placaDevolver);//bug, um mesmo veículo que aparece duas vezes na lista de alugado
+                        LocalDateTime dataHoraDevolucao = locadora.getTime();
+
+                        locadora.devolverVeiculo(aluguelDevolver,dataHoraDevolucao);
+
+                    } else {
+                        System.out.println("O veículo está disponível patra aluguel.");
+                    }
                     break;
 
                 case 8:
@@ -94,3 +155,4 @@ public class Main {
         }
     }
 }
+

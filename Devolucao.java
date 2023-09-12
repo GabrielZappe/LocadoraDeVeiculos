@@ -1,17 +1,18 @@
 import java.time.LocalDateTime;
 
-public class Aluguel {
+public class Devolucao {
     private Veiculo veiculo;
     private Cliente cliente;
     private LocalDateTime dataHoraInicio;
     private LocalDateTime dataHoraFim;
     private double valorAluguel;
 
-    public Aluguel(Cliente cliente, Veiculo veiculo, LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim, double valorAluguel) {
-        this.cliente = cliente;
-        this.veiculo = veiculo;
-        this.dataHoraInicio = dataHoraInicio;
+    public Devolucao(Aluguel aluguel, LocalDateTime dataHoraFim, double valorAluguel) {
+        this.cliente = aluguel.getCliente();
+        this.veiculo = aluguel.getVeiculo();
+        this.dataHoraInicio = aluguel.getDataHoraInicio();
         this.dataHoraFim = dataHoraFim;
         this.valorAluguel = valorAluguel;
+
     }
 }

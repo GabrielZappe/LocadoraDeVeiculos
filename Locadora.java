@@ -2,17 +2,21 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Locadora {
     private static List<Veiculo> veiculos;
     private List<Cliente> clientes;
     private List<Aluguel> alugueis;
 
+
     public Locadora() {
         this.veiculos = new ArrayList<>();
         this.clientes = new ArrayList<>();
         this.alugueis = new ArrayList<>();
     }
+
+    Scanner scanner = new Scanner(System.in);
 
     public void cadastrarVeiculo(Veiculo veiculo) {
         // Verifique se o veículo já está cadastrado pela placa
@@ -33,7 +37,6 @@ public class Locadora {
         return null;
     }
 
-
     public List<Veiculo> buscarVeiculoPorNome(String parteNome) {
         List<Veiculo> resultados = new ArrayList<>();
         for (Veiculo veiculo : veiculos) {
@@ -53,7 +56,7 @@ public class Locadora {
         }
     }
 
-    private Cliente buscarClientePorId(String id) {
+    public Cliente buscarClientePorId(String id) {
         for (Cliente cliente : clientes) {
             if (cliente.getId().equals(id)) {
                 return cliente;
@@ -62,25 +65,83 @@ public class Locadora {
         return null;
     }
 
-    public void alugarVeiculo(Cliente cliente, Veiculo veiculo, LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim) {
+    public Aluguel buscarAluguelPorPlaca(String placa) {
+        for (Aluguel aluguel : alugueis) {
+            Veiculo veiculo = aluguel.getVeiculo();
+            if (veiculo.getPlaca().equals(placa)) {
+                return aluguel;
+            }
+        }
+        return null;
+    }
 
-        if (!veiculo.isDisponivel()) {
-            System.out.println("Veículo não está disponível para aluguel.");
-            return;
+    public LocalDateTime getTime() { //arrumar esse caos
+        System.out.println("Dia: ");
+        int dia = scanner.nextInt();
+        int mes = 0;
+        int ano = 0;
+        int hora = 0;
+        int min = 0;
+        if (dia < 1 || dia > 31) {
+
+        } else {
+            System.out.println("Mes: ");
+            mes = scanner.nextInt();
+            if (mes < 1 || mes > 12) {
+                System.out.println("Valor inválido.");
+            } else {
+                System.out.println("Ano: ");
+                ano = scanner.nextInt();
+                if (ano < 0) {
+                    System.out.println("Valor inválido.");
+                } else {
+                    System.out.println("Hora: ");
+                    hora = scanner.nextInt();
+                    if (hora < 0 || hora > 24) {
+                        System.out.println("Valor inválido.");
+                    } else {
+                        System.out.println("Minuto: ");
+                        min = scanner.nextInt();
+                        if (min < 0 || min > 60) {
+
+                        } else {
+
+                        }
+                    }
+                }
+            }
         }
 
+        LocalDateTime dataHora = LocalDateTime.of(ano, mes, dia, hora, min);
+        return dataHora;
+    }
 
-        double valorAluguel = calcularValorAluguel(veiculo, dataHoraInicio, dataHoraFim);
+    public void alugarVeiculo(Cliente cliente, Veiculo veiculo, LocalDateTime dataHoraInicio){
+        veiculo.setDisponivel(true);
 
-
-        Aluguel aluguel = new Aluguel(cliente, veiculo, dataHoraInicio, dataHoraFim, valorAluguel);
+        Aluguel aluguel = new Aluguel(cliente, veiculo, dataHoraInicio);
         alugueis.add(aluguel);
-        veiculo.setDisponivel(false);
-
         System.out.println("Aluguel realizado com sucesso!");
     }
-    private double calcularValorAluguel(Veiculo veiculo, LocalDateTime inicio, LocalDateTime fim) {
 
+    public void devolverVeiculo(Aluguel aluguel, LocalDateTime dataHoraFim) {
+        Veiculo veiculo = aluguel.getVeiculo();
+        LocalDateTime dataHoraInicio = aluguel.getDataHoraInicio();
+
+        double valorAluguel = calcularValorAluguel(aluguel, dataHoraInicio, dataHoraFim);
+
+        Devolucao devolucao = new Devolucao(aluguel, dataHoraFim, valorAluguel);
+        veiculo.setDisponivel(false);
+
+        System.out.println("Devolução realizada com sucesso!");
+        System.out.printf("O valor total do aluguel foi de: %.2f", valorAluguel);
+        System.out.println();
+    }
+
+
+    private double calcularValorAluguel(Aluguel aluguel, LocalDateTime inicio, LocalDateTime fim) {
+
+        Veiculo veiculo = aluguel.getVeiculo();
         long diasCompletos = Duration.between(inicio, fim).toDays();
 
 
@@ -95,9 +156,9 @@ public class Locadora {
         double valorAluguel = valorDiario * diasCompletos;
 
 
-        if (veiculo.getCliente().isPessoaJuridica() && diasCompletos > 3) {
+        if (aluguel.getCliente().isPessoaJuridica() && diasCompletos > 3) {
             valorAluguel *= 0.9;
-        } else if (!veiculo.getCliente().isPessoaJuridica() && diasCompletos > 5) {
+        } else if (!aluguel.getCliente().isPessoaJuridica() && diasCompletos > 5) {
             valorAluguel *= 0.95;
         }
 
