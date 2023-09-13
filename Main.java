@@ -8,18 +8,6 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         Locadora locadora = new Locadora();
 
-        Veiculo maquinaMisterio = new Veiculo("1", "Máquina do MIstério", TipoVeiculo.SUV);
-        locadora.cadastrarVeiculo(maquinaMisterio);
-        Veiculo deLorean = new Veiculo("2", "DeLorean", TipoVeiculo.MEDIO);
-        locadora.cadastrarVeiculo(deLorean);
-        Veiculo ghostbusters = new Veiculo("3", "Ectomovel", TipoVeiculo.PEQUENO);
-        locadora.cadastrarVeiculo(ghostbusters);
-
-        Cliente dickVigarista = new Cliente("1", "Dick Vigarista", false);
-        locadora.cadastrarCliente(dickVigarista);
-        Cliente speedRacer = new Cliente("2", "Competidor X", true);
-        locadora.cadastrarCliente(speedRacer);
-
         while (true) {
             System.out.println("Escolha uma opção:");
             System.out.println("1. Cadastrar veículo");
