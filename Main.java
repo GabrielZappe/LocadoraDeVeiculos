@@ -1,6 +1,5 @@
 import java.util.Scanner;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class Main {
@@ -8,7 +7,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         Locadora locadora = new Locadora();
 
-        Veiculo maquinaMisterio = new Veiculo("1", "Máquina do MIstério", TipoVeiculo.SUV);
+        Veiculo maquinaMisterio = new Veiculo("1", "Máquina do Mistério", TipoVeiculo.SUV);
         locadora.cadastrarVeiculo(maquinaMisterio);
         Veiculo deLorean = new Veiculo("2", "DeLorean", TipoVeiculo.MEDIO);
         locadora.cadastrarVeiculo(deLorean);
@@ -97,19 +96,36 @@ public class Main {
                             break;
 
                         } else if (!veiculoAlugar.isDisponivel()){ // ver se está alugado
+
                             System.out.println("Veículo disponível.");
+
+                            Aluguel novoAluguel = locadora.buscarAluguelPorPlaca(placaAlugar);
+
                             System.out.println("Insira o ID do cliente: ");
                             String buscaClienteAlugar = scanner.next();
                             Cliente clienteAlugar = locadora.buscarClientePorId(buscaClienteAlugar);
 
                             if (clienteAlugar != null) {
+
                                 System.out.println("Cliente encontrado.");
 
                                 System.out.println("Insira a data da retirada: ");
-                                LocalDateTime dataHoraAluguel= locadora.getTime();
-                                System.out.println("A hora é: " + dataHoraAluguel); //apagar
+                                LocalDateTime dataHoraAluguel= locadora.getHora();
 
-                                locadora.alugarVeiculo(clienteAlugar, veiculoAlugar, dataHoraAluguel);
+                                if (dataHoraAluguel == null){
+
+                                    System.out.println("Insira uma data válida.");
+
+                                } else {
+
+                                    if (novoAluguel != null){
+                                        novoAluguel.setCliente( clienteAlugar);
+                                        novoAluguel.setDataHoraInicio(dataHoraAluguel);
+                                    }
+
+                                    locadora.alugarVeiculo(clienteAlugar, veiculoAlugar, dataHoraAluguel);
+
+                                }
 
                             } else {
                                 System.out.println("Cliente não cadastrado.");
@@ -134,9 +150,13 @@ public class Main {
                     } else if (veiculoDevolver.isDisponivel()){ // ver se está alugado
                         System.out.println("Veículo encontrado.");
                         Aluguel aluguelDevolver = locadora.buscarAluguelPorPlaca(placaDevolver);//bug, um mesmo veículo que aparece duas vezes na lista de alugado
-                        LocalDateTime dataHoraDevolucao = locadora.getTime();
+                        LocalDateTime dataHoraDevolucao = locadora.getHora();
 
-                        locadora.devolverVeiculo(aluguelDevolver,dataHoraDevolucao);
+                        if (dataHoraDevolucao == null){
+                            System.out.println("Insira uma data válida.");
+                        } else {
+                            locadora.devolverVeiculo(aluguelDevolver,dataHoraDevolucao);
+                        }
 
                     } else {
                         System.out.println("O veículo está disponível patra aluguel.");

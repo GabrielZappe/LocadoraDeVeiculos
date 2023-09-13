@@ -75,42 +75,19 @@ public class Locadora {
         return null;
     }
 
-    public LocalDateTime getTime() { //arrumar esse caos
-        System.out.println("Dia: ");
-        int dia = scanner.nextInt();
-        int mes = 0;
-        int ano = 0;
-        int hora = 0;
-        int min = 0;
-        if (dia < 1 || dia > 31) {
+    public LocalDateTime getHora() { //arrumar esse caos
+        int dia, mes, ano, hora, min;
 
-        } else {
-            System.out.println("Mes: ");
-            mes = scanner.nextInt();
-            if (mes < 1 || mes > 12) {
-                System.out.println("Valor inválido.");
-            } else {
-                System.out.println("Ano: ");
-                ano = scanner.nextInt();
-                if (ano < 0) {
-                    System.out.println("Valor inválido.");
-                } else {
-                    System.out.println("Hora: ");
-                    hora = scanner.nextInt();
-                    if (hora < 0 || hora > 24) {
-                        System.out.println("Valor inválido.");
-                    } else {
-                        System.out.println("Minuto: ");
-                        min = scanner.nextInt();
-                        if (min < 0 || min > 60) {
-
-                        } else {
-
-                        }
-                    }
-                }
-            }
-        }
+        System.out.print("Dia: ");
+        dia = scanner.nextInt();
+        System.out.print("Mes: ");
+        mes = scanner.nextInt();
+        System.out.print("Ano: ");
+        ano = scanner.nextInt();
+        System.out.print("Hora: ");
+        hora = scanner.nextInt();
+        System.out.print("Minuto: ");
+        min = scanner.nextInt();
 
         LocalDateTime dataHora = LocalDateTime.of(ano, mes, dia, hora, min);
         return dataHora;
@@ -136,8 +113,9 @@ public class Locadora {
         System.out.println("Devolução realizada com sucesso!");
         System.out.printf("O valor total do aluguel foi de: %.2f", valorAluguel);
         System.out.println();
-    }
 
+        valorAluguel = 0;
+    }
 
     private double calcularValorAluguel(Aluguel aluguel, LocalDateTime inicio, LocalDateTime fim) {
 
