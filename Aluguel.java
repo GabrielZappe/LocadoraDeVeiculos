@@ -22,4 +22,12 @@ public class Aluguel {
     public LocalDateTime getDataHoraInicio() {
         return dataHoraInicio;
     }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public void setDataHoraInicio(LocalDateTime dataHoraInicio) {
+        this.dataHoraInicio = dataHoraInicio;
+    }
 }
