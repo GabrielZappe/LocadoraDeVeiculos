@@ -88,7 +88,7 @@ public class Main {
                     break;
 
                 case 6:
-                    // Alugar veículo para pessoa física e jurídica
+                    
                     System.out.println("Digite a placa do veículo que deseja alugar: ");
                     String placaAlugar = scanner.next();
                     Veiculo veiculoAlugar = locadora.buscarVeiculoPorPlaca(placaAlugar);
@@ -121,8 +121,7 @@ public class Main {
                     break;
 
                 case 7:
-                    //Devolver veículo para pessoa física e jurídica
-
+                    
                     System.out.println("Digite a placa do veículo que deseja devolver: ");
                     String placaDevolver = scanner.next();
                     Veiculo veiculoDevolver = locadora.buscarVeiculoPorPlaca(placaDevolver);
